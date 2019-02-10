@@ -1,0 +1,22 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Jens Eickmeyer <jens.eickmeyer@carpinuslabs.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint **/*.js"
+  },
+  "dependencies": {
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.267.1",
+    "eslint": "^5.1.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0"
+  }
+}

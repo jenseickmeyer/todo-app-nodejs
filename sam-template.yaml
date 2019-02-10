@@ -1,0 +1,171 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    Simple implementation of a REST API for an imaginary todo app.
+
+Globals:
+  Function:
+    Runtime: nodejs8.10
+    Timeout: 60
+    Tags:
+      stage:
+        Ref: StageName
+
+Parameters:
+  StageName:
+    Type: String
+    Default: dev
+    Description: The Lambda Function Stage
+
+Resources:
+
+  RestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name:
+        Fn::Sub: todo-app-api-${StageName}
+      StageName: dev
+
+  ListTasksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: todo-app-${StageName}-list-tasks
+      CodeUri: src/
+      Handler: index.listTasks
+      Policies:
+        DynamoDBReadPolicy:
+          TableName:
+            Ref: TasksTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TasksTable
+      Events:
+        List:
+          Type: Api
+          Properties:
+            Path: /tasks
+            Method: GET
+            RestApiId:
+              Ref: RestApi
+
+  CreateTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: todo-app-${StageName}-create-task
+      CodeUri: src/
+      Handler: index.createTask
+      Policies:
+        DynamoDBCrudPolicy:
+          TableName:
+            Ref: TasksTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TasksTable
+      Events:
+        Create:
+          Type: Api
+          Properties:
+            Path: /tasks
+            Method: POST
+            RestApiId:
+              Ref: RestApi
+
+  GetTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: todo-app-${StageName}-get-task
+      CodeUri: src/
+      Handler: index.getTask
+      Policies:
+        DynamoDBReadPolicy:
+          TableName:
+            Ref: TasksTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TasksTable
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            Path: /tasks/{id}
+            Method: GET
+            RestApiId:
+              Ref: RestApi
+
+  UpdateTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: todo-app-${StageName}-update-task
+      CodeUri: src/
+      Handler: index.updateTask
+      Policies:
+        DynamoDBCrudPolicy:
+          TableName:
+            Ref: TasksTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TasksTable
+      Events:
+        Delete:
+          Type: Api
+          Properties:
+            Path: /tasks/{id}
+            Method: PUT
+            RestApiId:
+              Ref: RestApi
+
+  DeleteTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: todo-app-${StageName}-delete-task
+      CodeUri: src/
+      Handler: index.deleteTask
+      Policies:
+        DynamoDBCrudPolicy:
+          TableName:
+            Ref: TasksTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TasksTable
+      Events:
+        Delete:
+          Type: Api
+          Properties:
+            Path: /tasks/{id}
+            Method: DELETE
+            RestApiId:
+              Ref: RestApi
+
+  TasksTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName:
+        Fn::Sub: todo-app-${StageName}-tasks
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      Tags:
+        stage:
+          Ref: StageName
+
+Outputs:
+  ApiUrl:
+    Value:
+      Fn::Join:
+        - ""
+        - - "https://"
+          - Ref: RestApi
+          - Fn::Sub: ".execute-api.${AWS::Region}.amazonaws.com/dev"
