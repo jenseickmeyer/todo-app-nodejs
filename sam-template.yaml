@@ -55,6 +55,16 @@ Resources:
           TABLE_NAME:
             Ref: TasksTable
 
+  # Permisson must be granted to API Gateway for invoking a Lambda function
+  # (https://github.com/awslabs/serverless-application-model/issues/59)
+  ListTasksFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: ListTasksFunction
+      Principal: apigateway.amazonaws.com
+
   CreateTaskFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -70,6 +80,16 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: TasksTable
+
+  # Permisson must be granted to API Gateway for invoking a Lambda function
+  # (https://github.com/awslabs/serverless-application-model/issues/59)
+  CreateTaskFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: CreateTaskFunction
+      Principal: apigateway.amazonaws.com
 
   GetTaskFunction:
     Type: AWS::Serverless::Function
@@ -87,6 +107,16 @@ Resources:
           TABLE_NAME:
             Ref: TasksTable
 
+  # Permisson must be granted to API Gateway for invoking a Lambda function
+  # (https://github.com/awslabs/serverless-application-model/issues/59)
+  GetTaskFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: GetTaskFunction
+      Principal: apigateway.amazonaws.com
+
   UpdateTaskFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -103,6 +133,16 @@ Resources:
           TABLE_NAME:
             Ref: TasksTable
 
+  # Permisson must be granted to API Gateway for invoking a Lambda function
+  # (https://github.com/awslabs/serverless-application-model/issues/59)
+  UpdateTaskFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: UpdateTaskFunction
+      Principal: apigateway.amazonaws.com
+
   DeleteTaskFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -118,6 +158,16 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: TasksTable
+
+  # Permisson must be granted to API Gateway for invoking a Lambda function
+  # (https://github.com/awslabs/serverless-application-model/issues/59)
+  DeleteTaskFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: DeleteTaskFunction
+      Principal: apigateway.amazonaws.com
 
   TasksTable:
     Type: AWS::Serverless::SimpleTable
