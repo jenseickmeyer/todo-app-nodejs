@@ -12,6 +12,9 @@ Globals:
         Ref: StageName
 
 Parameters:
+  S3BucketName:
+    Type: String
+    Description: The name of the S3 bucket in which the Swagger specification can be found.
   StageName:
     Type: String
     Default: dev
@@ -25,6 +28,16 @@ Resources:
       Name:
         Fn::Sub: todo-app-api-${StageName}
       StageName: dev
+      DefinitionBody:
+          Fn::Transform:
+            Name: AWS::Include
+            Parameters:
+              Location:
+                Fn::Join:
+                  - ''
+                  - - 's3://'
+                    - Ref: S3BucketName
+                    - '/swagger.yaml'
 
   ListTasksFunction:
     Type: AWS::Serverless::Function
@@ -41,14 +54,6 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: TasksTable
-      Events:
-        List:
-          Type: Api
-          Properties:
-            Path: /tasks
-            Method: GET
-            RestApiId:
-              Ref: RestApi
 
   CreateTaskFunction:
     Type: AWS::Serverless::Function
@@ -65,14 +70,6 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: TasksTable
-      Events:
-        Create:
-          Type: Api
-          Properties:
-            Path: /tasks
-            Method: POST
-            RestApiId:
-              Ref: RestApi
 
   GetTaskFunction:
     Type: AWS::Serverless::Function
@@ -89,14 +86,6 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: TasksTable
-      Events:
-        Get:
-          Type: Api
-          Properties:
-            Path: /tasks/{id}
-            Method: GET
-            RestApiId:
-              Ref: RestApi
 
   UpdateTaskFunction:
     Type: AWS::Serverless::Function
@@ -113,14 +102,6 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: TasksTable
-      Events:
-        Delete:
-          Type: Api
-          Properties:
-            Path: /tasks/{id}
-            Method: PUT
-            RestApiId:
-              Ref: RestApi
 
   DeleteTaskFunction:
     Type: AWS::Serverless::Function
@@ -137,14 +118,6 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: TasksTable
-      Events:
-        Delete:
-          Type: Api
-          Properties:
-            Path: /tasks/{id}
-            Method: DELETE
-            RestApiId:
-              Ref: RestApi
 
   TasksTable:
     Type: AWS::Serverless::SimpleTable

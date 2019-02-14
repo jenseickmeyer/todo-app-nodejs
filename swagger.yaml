@@ -1,0 +1,139 @@
+swagger: "2.0"
+info:
+  version: "v1.0"
+  title: todo-app
+  description: |
+    Simple API for task management application
+
+schemes:
+  - "https"
+
+paths:
+  /:
+    get:
+      summary: List tasks
+      description: Returns list of tasks
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: Successful operation
+        "500":
+          description: Internal server error
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListTasksFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    post:
+      summary: Create task
+      description: Creates a new task
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "201"
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateTaskFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+  /{id}:
+    get:
+      summary: Get task
+      description: Returns one specific task
+      parameters:
+        - name: id
+          in: path
+          description: ID of the task to return
+          required: true
+          type: string
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: Task not found
+        "500":
+          description: Internal server error
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetTaskFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    put:
+      summary: Update task
+      description: Updates one specific task
+      parameters:
+        - name: id
+          in: path
+          description: ID of the task to return
+          required: true
+          type: string
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: Successful operation
+        "500":
+          description: Internal server error
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateTaskFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    delete:
+      summary: Delete task
+      description: Deletes one specific task
+      parameters:
+        - name: id
+          in: path
+          description: ID of the task to return
+          required: true
+          type: string
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: Successful operation
+        "500":
+          description: Internal server error
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteTaskFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
