@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - cd src
+      # Install the dependencies
+      - npm install
+  build:
+    commands:
+      # Run tests
+      - npm test
+      # Remove all dependencies not relevant for production
+      - npm prune --production
+      - cd ..
+  post_build:
+    commands:
+      # Create and upload a deployment package
+      - aws cloudformation package --template-file sam-template.yaml --s3-bucket $S3_BUCKET --output-template-file sam-template-output.yaml
+
+artifacts:
+  files:
+    - sam-template-output.yaml
