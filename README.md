@@ -20,7 +20,7 @@ After deploying the application the REST API endpoints can be tested via `curl`.
 The following command lists all the tasks
 
 ```bash
-curl -i $API_GATEWAY_URL/tasks
+curl -i $API_GATEWAY_URL
 ```
 
 Create task
@@ -28,11 +28,11 @@ Create task
 ```bash
 curl -i \
      -H "Content-Type: application/json" \
-     -d '{ "title": "Task 1", "description": "Lorem ipsum dolor est" }' $API_GATEWAY_URL/tasks
+     -d '{ "title": "Task 1", "description": "Lorem ipsum dolor est" }' $API_GATEWAY_URL
 ```
 
 Delete task with ID `25aa0b59-b845-4c43-9e6e-9673488c6a50`
 
 ```bash
-curl -i -X "DELETE" $API_GATEWAY_URL/tasks/25aa0b59-b845-4c43-9e6e-9673488c6a50
+curl -i -X "DELETE" $API_GATEWAY_URL/25aa0b59-b845-4c43-9e6e-9673488c6a50
 ```

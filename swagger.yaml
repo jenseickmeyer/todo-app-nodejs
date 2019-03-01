@@ -1,31 +1,30 @@
-swagger: "2.0"
+openapi: "3.0.1"
 info:
+  title: "tasks-api"
   version: "v1.0"
-  title: todo-app
-  description: |
-    Simple API for task management application
-
-schemes:
-  - "https"
-
 paths:
   /:
     get:
       summary: List tasks
       description: Returns list of tasks
-      produces:
-      - "application/json"
       responses:
-        "200":
-          description: Successful operation
-        "500":
-          description: Internal server error
+        200:
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+        500:
+          description: "500 response"
+          content: {}
       x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListTasksFunction.Arn}/invocations
         responses:
           default:
             statusCode: "200"
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListTasksFunction.Arn}/invocations
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
@@ -33,23 +32,22 @@ paths:
     post:
       summary: Create task
       description: Creates a new task
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
       responses:
-        "200":
-          description: Successful operation
-        "400":
-          description: Bad request
-        "500":
-          description: Internal server error
+        201:
+          description: "201 response"
+          content: {}
+        400:
+          description: "400 response"
+          content: {}
+        500:
+          description: "500 response"
+          content: {}
       x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateTaskFunction.Arn}/invocations
         responses:
           default:
             statusCode: "201"
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateTaskFunction.Arn}/invocations
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
@@ -59,26 +57,30 @@ paths:
       summary: Get task
       description: Returns one specific task
       parameters:
-        - name: id
-          in: path
-          description: ID of the task to return
+        - name: "id"
+          in: "path"
           required: true
-          type: string
-      produces:
-      - "application/json"
+          schema:
+            type: "string"
       responses:
-        "200":
-          description: Successful operation
-        "404":
-          description: Task not found
-        "500":
-          description: Internal server error
+        200:
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        404:
+          description: "404 response"
+          content: {}
+        500:
+          description: "500 response"
+          content: {}
       x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetTaskFunction.Arn}/invocations
         responses:
           default:
             statusCode: "200"
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetTaskFunction.Arn}/invocations
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
@@ -87,26 +89,30 @@ paths:
       summary: Update task
       description: Updates one specific task
       parameters:
-        - name: id
-          in: path
-          description: ID of the task to return
+        - name: "id"
+          in: "path"
           required: true
-          type: string
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
+          schema:
+            type: "string"
       responses:
-        "200":
-          description: Successful operation
-        "500":
-          description: Internal server error
+        200:
+          description: "200 response"
+          content: {}
+        400:
+          description: "400 response"
+          content: {}
+        404:
+          description: "404 response"
+          content: {}
+        500:
+          description: "500 response"
+          content: {}
       x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateTaskFunction.Arn}/invocations
         responses:
           default:
             statusCode: "200"
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateTaskFunction.Arn}/invocations
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
@@ -115,25 +121,34 @@ paths:
       summary: Delete task
       description: Deletes one specific task
       parameters:
-        - name: id
-          in: path
-          description: ID of the task to return
+        - name: "id"
+          in: "path"
           required: true
-          type: string
-      produces:
-        - "application/json"
+          schema:
+            type: "string"
       responses:
-        "200":
-          description: Successful operation
-        "500":
-          description: Internal server error
+        200:
+          description: "200 response"
+          content: {}
+        500:
+          description: "500 response"
+          content: {}
       x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteTaskFunction.Arn}/invocations
         responses:
           default:
             statusCode: "200"
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteTaskFunction.Arn}/invocations
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
         type: "aws_proxy"
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
