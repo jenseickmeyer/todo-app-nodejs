@@ -1,10 +1,18 @@
 {
-    "extends": "standard",
-    "rules": {
-        "semi": ["error", "always"],
-        "no-unused-vars": ["warn"]
-    },
-    "env": {
-        "mocha": true
-    }
+  "extends": "eslint:recommended",
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "rules": {
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-unused-vars": [
+      "warn"
+    ]
+  }
 }
