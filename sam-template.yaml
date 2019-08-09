@@ -10,6 +10,8 @@ Globals:
     Tags:
       stage:
         Ref: StageName
+  Api:
+    OpenApiVersion: '3.0.1'
 
 Parameters:
   S3BucketName:
@@ -27,7 +29,8 @@ Resources:
     Properties:
       Name:
         Fn::Sub: todo-app-api-${StageName}
-      StageName: dev
+      StageName:
+        Ref: StageName
       DefinitionBody:
           Fn::Transform:
             Name: AWS::Include
