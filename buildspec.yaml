@@ -26,7 +26,7 @@ phases:
       # Create and upload a deployment package
       - aws cloudformation package --template-file sam-template.yaml --s3-bucket $S3_BUCKET --output-template-file sam-template-output.yaml
       # Replace the placeholder S3_BUCKET with the specific value of the environment variable
-      - find -name config-*.json -exec sed -i "s/S3_BUCKET/${S3_BUCKET}/g" {} \;
+      - sed -i "s/S3_BUCKET/${S3_BUCKET}/g" config-*.json
 artifacts:
   files:
     - sam-template-output.yaml
