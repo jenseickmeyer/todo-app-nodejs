@@ -1,0 +1,6 @@
+{
+  "Parameters": {
+    "StageName": "prod",
+    "S3BucketName": "S3_BUCKET"
+  }
+}
