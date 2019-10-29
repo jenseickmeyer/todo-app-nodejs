@@ -18,16 +18,3 @@ phases:
       # Remove all dependencies not relevant for production
       - npm prune --production
       - cd ..
-  post_build:
-    commands:
-      # Copy Swagger file to S3 to be able to transform its content
-      # for "deploying" it to API Gateway
-      - aws s3 cp swagger.yaml s3://$S3_BUCKET/swagger.yaml
-      # Create and upload a deployment package
-      - aws cloudformation package --template-file sam-template.yaml --s3-bucket $S3_BUCKET --output-template-file sam-template-output.yaml
-      # Replace the placeholder S3_BUCKET with the specific value of the environment variable
-      - sed -i "s/S3_BUCKET/${S3_BUCKET}/g" config-*.json
-artifacts:
-  files:
-    - sam-template-output.yaml
-    - config-*.json
