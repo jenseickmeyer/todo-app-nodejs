@@ -23,12 +23,14 @@ jobs:
           npm install
       - name: Run linter
         run: |
+          cd src
           npm run lint
       - name: Run tests
         run: |
+          cd src
           npm test
       - name: Prepare packaging
         run: |
+          cd src
           npm prune --production
           rm -rf tests
-          cd ..
