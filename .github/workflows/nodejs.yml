@@ -43,6 +43,8 @@ jobs:
           STACK_NAME: todo-app-github-actions
           STAGE_NAME: test
         run: |
-          aws s3 cp swagger.yaml s3://$S3_BUCKET/swagger.yaml
-          aws cloudformation package --template-file sam-template.yaml --s3-bucket $S3_BUCKET --output-template-file sam-template-output.yaml --region $AWS_REGION
-          aws cloudformation deploy --template-file sam-template-output.yaml --stack-name $STACK_NAME --parameter-overrides StageName=$STAGE_NAME S3BucketName=$S3_BUCKET --capabilities CAPABILITY_IAM --region $AWS_REGION
+          aws s3 ls --human-readable \
+                    --region $AWS_REGION
+#          aws s3 cp swagger.yaml s3://$S3_BUCKET/swagger.yaml
+#          aws cloudformation package --template-file sam-template.yaml --s3-bucket $S3_BUCKET --output-template-file sam-template-output.yaml --region $AWS_REGION
+#          aws cloudformation deploy --template-file sam-template-output.yaml --stack-name $STACK_NAME --parameter-overrides StageName=$STAGE_NAME S3BucketName=$S3_BUCKET --capabilities CAPABILITY_IAM --region $AWS_REGION
