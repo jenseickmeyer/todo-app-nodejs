@@ -11,17 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js 10.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 10.x
-    - name: npm install, build, and test
-      run: |
-        cd src
-        npm install
-        npm run lint
-        npm test
-        npm prune --production
-      env:
-        CI: true
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Install dependencies
+        run: |
+          cd src
+          npm install
+      - name: Run linter
+        run: |
+          npm run lint
+      - name: Run tests
+        run: |
+          npm test
+      - name: Prepare packaging
+        run: |
+          npm prune --production
+          rm -rf tests
+          cd ..
