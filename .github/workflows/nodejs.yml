@@ -34,3 +34,6 @@ jobs:
           cd src
           npm prune --production
           rm -rf tests
+      - name: Deploy
+        run: |
+          aws --version
