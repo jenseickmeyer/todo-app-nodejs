@@ -38,6 +38,10 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          S3_BUCKET: com.carpinuslabs.sam.eu-central-1
+          STACK_NAME: todo-app-github-actions
+          STAGE_NAME: test
         run: |
-          aws --version
-          aws s3 ls
+          aws s3 cp swagger.yaml s3://$S3_BUCKET/swagger.yaml
+          aws cloudformation package --template-file sam-template.yaml --s3-bucket $S3_BUCKET --output-template-file sam-template-output.yaml
+          aws cloudformation deploy --template-file $OUTPUT_FILE --stack-name $STACK_NAME --parameter-overrides StageName=$STAGE_NAME S3BucketName=$S3_BUCKET --capabilities CAPABILITY_IAM
