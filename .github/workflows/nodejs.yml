@@ -29,6 +29,11 @@ jobs:
         run: |
           cd src
           npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
       - name: Prepare packaging
         run: |
           cd src
