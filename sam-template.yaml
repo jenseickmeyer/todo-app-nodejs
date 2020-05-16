@@ -5,7 +5,7 @@ Description: >
 
 Globals:
   Function:
-    Runtime: nodejs8.10
+    Runtime: nodejs12.x
     Timeout: 60
     Tags:
       stage:
