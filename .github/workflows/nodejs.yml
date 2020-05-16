@@ -1,0 +1,54 @@
+name: Node CI
+
+on:
+  push:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        run: |
+          cd src
+          npm ci
+      - name: Run linter
+        run: |
+          cd src
+          npm run lint
+      - name: Run tests
+        run: |
+          cd src
+          npm test
+      - name: Prepare packaging
+        run: |
+          cd src
+          npm prune --production
+          rm -rf tests
+      - name: Deploy
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_REGION: eu-central-1
+          S3_BUCKET: com.carpinuslabs.sam.eu-central-1
+          STACK_NAME: todo-app-github-actions
+          STAGE_NAME: test
+        run: |
+          aws s3 cp swagger.yaml s3://$S3_BUCKET/swagger.yaml
+          aws cloudformation package --template-file sam-template.yaml \
+                                     --s3-bucket $S3_BUCKET \
+                                     --output-template-file sam-template-output.yaml \
+                                     --region $AWS_REGION
+          aws cloudformation deploy --template-file sam-template-output.yaml \
+                                    --stack-name $STACK_NAME \
+                                    --parameter-overrides StageName=$STAGE_NAME S3BucketName=$S3_BUCKET \
+                                    --capabilities CAPABILITY_IAM \
+                                    --region $AWS_REGION

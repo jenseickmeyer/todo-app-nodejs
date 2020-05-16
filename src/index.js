@@ -2,7 +2,7 @@
 
 const service = require('./service.js');
 
-exports.listTasks = async (event) => {
+exports.listTasks = async () => {
   const tasks = await service.listTasks();
 
   return {
