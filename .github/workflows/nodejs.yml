@@ -5,6 +5,9 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: ./src
 
     runs-on: ubuntu-latest
 
@@ -16,23 +19,17 @@ jobs:
         with:
           node-version: 12.x
       - name: Install dependencies
-        run: |
-          cd src
-          npm ci
+        run: npm ci
       - name: Run linter
-        run: |
-          cd src
-          npm run lint
+        run: npm run lint
       - name: Run tests
-        run: |
-          cd src
-          npm test
+        run: npm test
       - name: Prepare packaging
         run: |
-          cd src
           npm prune --production
           rm -rf tests
       - name: Deploy
+        working-directory: ./
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
